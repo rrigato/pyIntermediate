@@ -62,4 +62,22 @@ def justSpan():
 		print(name.get_text())
 
 
+		
+def page3():
+	"""
+		Prints out all of the rows in a table except for the title row
+	"""
+	html = getWebpage("http://www.pythonscraping.com/pages/page3.html")
+
+	bsObj = readTag(html)
+	
+	#prints everything but the title row
+	for sibling in bsObj.find("table", {"id": "giftList"}).tr.next_siblings:
+		print(sibling)
+
+
+		
+		
 justSpan()
+
+page3()
