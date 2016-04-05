@@ -1,4 +1,13 @@
-# pyIntermediate
+## pyIntermediate
+
+
+####[Web Scraping using Python](https://github.com/rrigato/pyIntermediate/blob/master/firstScrape.py)
+This script demonstrates how to web scrape some basic html sites. The functions also are robost due to the error handling that is provided with try catch blocks
+
+* getWebage() = returns the html after making an http GET request from a remote web server
+* readTag() = takes html object and returns a beautifulSoup object
+* justSpan() = demonstrates scraping <span> tags from a webpage
+* page3() = demonstrates scraping all of the table rows from a webpage
 
 
 ####[Basic User stream from twitter API] (https://github.com/rrigato/pyIntermediate/blob/master/twitterStream.py)
