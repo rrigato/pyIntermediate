@@ -2,7 +2,6 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
 
-random.seed(datetime.datetime.now())
 def getWebpage(url):
 	"""
 		Takes a wiki article url and appends it to the wikipedia domain
@@ -36,7 +35,9 @@ def readTag(html):
 	else:
 		return(bsObj)
 
-def getLinks(bsObj, pageUrl):
+		
+		
+def getLinks(bsObj):
 	'''
 		Takes a beatuiful soup object and a /wiki/article_name
 		string to print the title, first paragraph of content and the
@@ -45,15 +46,16 @@ def getLinks(bsObj, pageUrl):
 	global pages
 	try:
 		print( bsObj.h1.get_text() )
-		print( bsObj.find(id="mq-content-text").findAll("p")[0] )
-		print( bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
+		print( bsObj.find(id="mw-content-text").findAll("p")[0] )
+		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
+	except AttributeError as e:
+		print("\nUnable to find header, paragraph 1 or edit page")
+		print(e )
 		
+
 if __name__ == "__main__":
-	webpage = getWebpage("/wiki/Kevin_Bacon")
-	links = readTag(webpage)
+	webpage = getWebpage("/wiki/Toonami")
+	bsObj = readTag(webpage)
 	
-	while len(links) >0 :
-		newArticle = links[random.randint(0, len(links) -1)].attrs["href"]
-		print(newArticle)
-		webpage = getWebpage(newArticle)
-		links = readTag(webpage)
+	getLinks(bsObj)
+	
