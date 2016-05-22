@@ -4,17 +4,15 @@ import datetime
 import random 
 import re
 
-
+random.seed(datetime.datetime.now())
 def getWebpage(url):
 	"""
 		Takes a wiki article url and appends it to the wikipedia domain
 	"""
 	try:
 		#requests a web page from a directory and prints out the html
-		fullUrl = "http://en.wikipedia.org" + url
-		print(fullUrl)
+		fullUrl = "http://en.wikipedia.org"+url
 		html = urlopen(fullUrl)
-		print(html)
 	#catches page not found on server
 	except HTTPError as e:
 		print(e)
@@ -38,20 +36,16 @@ def readTag(html):
 		print(e)
 		sys.exit(1)
 	else:
-		return bsObj.find("div", {"id": "bodycontent"}).findAll( "a",
-		re.compile("^(/wiki/)((?!:).)*$") )
+		return bsObj.find("div", {"id":"bodyContent"}).findAll("a", href=re.compile("^(/wiki/)((?!:).)*$"))
+
 		
 		
 if __name__ == "__main__":
 	webpage = getWebpage("/wiki/Kevin_Bacon")
-	
-
 	links = readTag(webpage)
-	
 	
 	while len(links) >0 :
 		newArticle = links[random.randint(0, len(links) -1)].attrs["href"]
 		print(newArticle)
-		links = getWebpage(newArticle)
-		links = readTag(newArticle)
-	
+		webpage = getWebpage(newArticle)
+		links = readTag(webpage)
