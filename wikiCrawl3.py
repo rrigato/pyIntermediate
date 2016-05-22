@@ -46,7 +46,7 @@ def getLinks(bsObj):
 	global pages
 	try:
 		print( bsObj.h1.get_text() )
-		print( bsObj.find(id="mw-content-text").findAll("p")[0] )
+		print( bsObj.find(id="mw-content-text").findAll("p")[0].get_text() )
 		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
 	except AttributeError as e:
 		print("\nUnable to find header, paragraph 1 or edit page")
