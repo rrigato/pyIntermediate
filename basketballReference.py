@@ -3,13 +3,13 @@ from bs4 import BeautifulSoup
 import re
 
 
-def getWebpage():
+def getWebpage(url):
 	"""
-		Takes a wiki article url and appends it to the wikipedia domain
+		Takes the basketball-reference playoff data url and returns it
 	"""
 	try:
 		#requests a web page from a directory and prints out the html
-		fullUrl = "http://www.basketball-reference.com/leagues/?lid=front_qi_leagues"
+		fullUrl = "http://www.basketball-reference.com" + url
 		html = urlopen(fullUrl)
 	#catches page not found on server
 	except HTTPError as e:
@@ -47,7 +47,8 @@ def getLinks(bsObj):
 	global pages
 	#.find("div", {"id":"page-container"})
 	try:
-		print( bsObj.find("div", {"id":"page-container"}) )
+		print( bsObj.find("div", {"id":"page_container"}).
+					find("div", {"id":"page_content"}).get_text() )
 #		print( bsObj.find(id="mw-content-text").findAll("p")[0].get_text() )
 #		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
 	except AttributeError as e:
@@ -56,7 +57,7 @@ def getLinks(bsObj):
 		
 
 if __name__ == "__main__":
-	webpage = getWebpage()
+	webpage = getWebpage("/leagues/?lid=front_qi_leagues")
 	bsObj = readTag(webpage)
 	
 	getLinks(bsObj)
