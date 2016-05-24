@@ -59,25 +59,27 @@ def getLinks(bsObj):
 		print("Unable to find all Champions")
 		print(e )
 		
-def getOppponents(link):
+def getOpponents(link):
 	webpage = getWebpage(link)
 	bsObj = readTag(webpage)
 	
-	print(bsObj)
+	print((bsObj.find("div", {"id":"page_container"})
+					.find("div", {"id":"info_box"}).findAll("p")[4]	))
 
 if __name__ == "__main__":
 	webpage = getWebpage("/leagues/?lid=front_qi_leagues")
 	bsObj = readTag(webpage)
 	
 	links = getLinks(bsObj)
-	for link in range(32):
-		print(links[link])
+#	for link in range(32):
+#		print(links[link]['href'])
 
 	index = range(1,33)
 	columns =['Year','Team', 'Opp_Win_Percentage', 'Opp_Point_Diff']
 	df = pd.DataFrame(index = index, columns = columns)
-	print(df)
+#	print(df)
+
 	
-#	for link in range(1):
-#		getOpponents
+	for link in range(1):
+		getOpponents(links[link]['href'])
 	
