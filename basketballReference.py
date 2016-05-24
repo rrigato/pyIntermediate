@@ -131,16 +131,34 @@ def getOpponents(link):
 		print(total)
 		return(total)
 	
-#bsObj.find("div", {"id":"page_container"})
-#					.find("div", {"id":"info_box"}).findAll("p")[4]	
+
+'''
+	runs when the following command is called in the working directory
+	of this script:
+	python basketballReference.py
+	
+	Calls functions in order needed to get necessary data
+	
+	1) Calls the getLinks() function to get all of the internal links of 
+		championship winning team pages
+	2) Initializes data frame that will hold the year of championship,
+	team that won, and average of their playoff opponents regular season
+	point differential and srs
+	Note: The NBA switched to a a 4 round playoff in 1984, so that is the 
+	first year included
+'''
 if __name__ == "__main__":
+
+	#internal reference to basketball reference that has all championship 
+	#winners
 	webpage = getWebpage("/leagues/?lid=front_qi_leagues")
 	bsObj = readTag(webpage)
 	
+	#links to championship winners team pages
 	links = getLinks(bsObj)
-#	for link in range(32):
-#		print(links[link]['href'])
 
+
+	#initialize the data frame  
 	index = range(0,33)
 	columns =['Year','Championship_Team', 'Opp_Point_Differential', 'Opp_SRS']
 	df = pd.DataFrame(index = index, columns = columns)
@@ -155,7 +173,7 @@ if __name__ == "__main__":
 	print(df)
 
 	
-	for link in range(2):
+	for link in range(32):
 		df.ix[link + 1,1] = links[link]['href'][7:9]
 		print("Championship winning team:")
 		print(df.ix[link + 1,1])
@@ -172,7 +190,10 @@ if __name__ == "__main__":
 		print("\n\n")
 		
 	
+	#fills in the year each championship was won
 	df.ix[0,0] = 2016
 	for year in range(1,33):
 		df.ix[year,0] = df.ix[year -1 ,0] -1 
-	print(df.sort(['Opp_Point_Differential'], ascending= ['False']) )
+		
+	#prints the championship team by highest playoff opponent point differential
+	print( df.sort_values(by='Opp_Point_Differential', ascending= False)  )
