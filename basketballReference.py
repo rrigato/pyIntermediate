@@ -1,7 +1,7 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
-
+import pandas as pd
 
 def getWebpage(url):
 	"""
@@ -50,17 +50,34 @@ def getLinks(bsObj):
 		links =( bsObj.find("div", {"id":"page_container"})
 					.find("div", {"id":"page_content"})	
 					.findAll("a", href = re.compile("\/teams\/*") ) )
-		for link in links:
-			print(link['href'])
+#		for link in links:
+#			print(link['href'])
+		return(links)
 #		print( bsObj.find(id="mw-content-text").findAll("p")[0].get_text() )
 #		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
 	except AttributeError as e:
 		print("Unable to find all Champions")
 		print(e )
 		
+def getOppponents(link):
+	webpage = getWebpage(link)
+	bsObj = readTag(webpage)
+	
+	print(bsObj)
 
 if __name__ == "__main__":
 	webpage = getWebpage("/leagues/?lid=front_qi_leagues")
 	bsObj = readTag(webpage)
 	
-	getLinks(bsObj)
+	links = getLinks(bsObj)
+	for link in range(32):
+		print(links[link])
+
+	index = range(1,33)
+	columns =['Year','Team', 'Opp_Win_Percentage', 'Opp_Point_Diff']
+	df = pd.DataFrame(index = index, columns = columns)
+	print(df)
+	
+#	for link in range(1):
+#		getOpponents
+	
