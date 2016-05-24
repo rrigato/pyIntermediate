@@ -41,9 +41,8 @@ def readTag(html):
 		
 def getLinks(bsObj):
 	'''
-		Takes a beatuiful soup object and a /wiki/article_name
-		string to print the title, first paragraph of content and the
-		linke to the edit page
+		Takes a beatuiful soup object to find all championship winning 
+		teams
 	'''
 	global pages
 	#.find("div", {"id":"page-container"})
@@ -51,11 +50,9 @@ def getLinks(bsObj):
 		links =( bsObj.find("div", {"id":"page_container"})
 					.find("div", {"id":"page_content"})	
 					.findAll("a", href = re.compile("\/teams\/*") ) )
-#		for link in links:
-#			print(link['href'])
+
 		return(links)
-#		print( bsObj.find(id="mw-content-text").findAll("p")[0].get_text() )
-#		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
+
 	except AttributeError as e:
 		print("Unable to find all Champions")
 		print(e )
@@ -77,6 +74,9 @@ def getOpponents(link):
 		Note: All Championship winning teams since 1984 have played four rounds
 		to win the championship
 	'''
+	
+	#gets the beatuifulSoup object for the championship team page
+	#passed to the function
 	webpage = getWebpage(link)
 	bsObj = readTag(webpage)
 	
@@ -94,32 +94,42 @@ def getOpponents(link):
 	
 	#keeps track of regualr season srs of all 4 playoff opponents
 	simple_rating = 0
-	
-	#get each playoff opponents record, point differential and srs
-	for round in playoffs:
-		time.sleep(3)
-		print((round.attrs['href']))
-		bsObj2 = readTag(getWebpage(round.attrs['href']))
-		#print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"info_box"}).findAll("p")[1] )
-		team_stats =  ( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"page_content"})
-						.find("div", {"id":"all_team_misc"}).find("div", {"id":"div_team_misc"})
-						.find("table", {"id":"team_misc"}).find("tbody").findAll("tr", {"class":""})[0]
-						.findAll("td", {"align":"right"}) ) 
-		important_stats =  [ team_stats[i] for i in keep ]
+	try:
+		#get each playoff opponents this loop gets their point differential and srs
+		for round in playoffs:
 		
-		#gives each opponents margin of victory and srs
-		print(important_stats[0].get_text())
-		print(important_stats[1].get_text())
-		#casting SRS and point_differential as float and getting the cumulative sum for
-		#all four playoff opponents
-		point_differential = point_differential + float(important_stats[0].get_text())
-		simple_rating = simple_rating + float(important_stats[1].get_text())
-	print(point_differential/4)
-	print(simple_rating/4)
-	total = [point_differential / 4, simple_rating / 4]
-	print("\n Point Differential and SRS of opponents for the playoffs")
-	print(total)
-	return(total)
+			#crawl delay for basketball reference is 3 seconds
+			time.sleep(3)
+			print((round.attrs['href']))
+			bsObj2 = readTag(getWebpage(round.attrs['href']))
+			#print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"info_box"}).findAll("p")[1] )
+			
+			#gets the table row which contains the teams Point Differential and SRS among other things
+			team_stats =  ( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"page_content"})
+							.find("div", {"id":"all_team_misc"}).find("div", {"id":"div_team_misc"})
+							.find("table", {"id":"team_misc"}).find("tbody").findAll("tr", {"class":""})[0]
+							.findAll("td", {"align":"right"}) ) 
+							
+			#keeps point differential and 
+			important_stats =  [ team_stats[i] for i in keep ]
+			
+			#gives each opponents margin of victory and srs
+			print(important_stats[0].get_text())
+			print(important_stats[1].get_text())
+			#casting SRS and point_differential as float and getting the cumulative sum for
+			#all four playoff opponents
+			point_differential = point_differential + float(important_stats[0].get_text())
+			simple_rating = simple_rating + float(important_stats[1].get_text())
+	except AttributeError as e:
+		print("Unable to find Point Differentials OR SRSs for all opponents")
+		print(e )
+	else:
+		print(point_differential/4)
+		print(simple_rating/4)
+		total = [point_differential / 4, simple_rating / 4]
+		print("\n Point Differential and SRS of opponents for the playoffs")
+		print(total)
+		return(total)
 	
 #bsObj.find("div", {"id":"page_container"})
 #					.find("div", {"id":"info_box"}).findAll("p")[4]	
@@ -132,7 +142,7 @@ if __name__ == "__main__":
 #		print(links[link]['href'])
 
 	index = range(0,33)
-	columns =['Year','Team', 'Opp_Point_Differential', 'Opp_SRS']
+	columns =['Year','Championship_Team', 'Opp_Point_Differential', 'Opp_SRS']
 	df = pd.DataFrame(index = index, columns = columns)
 	
 	#filling in the values if OKC were to potientially win championship
@@ -145,7 +155,7 @@ if __name__ == "__main__":
 	print(df)
 
 	
-	for link in range(1):
+	for link in range(2):
 		df.ix[link + 1,1] = links[link]['href'][7:9]
 		print("Championship winning team:")
 		print(df.ix[link + 1,1])
@@ -156,6 +166,7 @@ if __name__ == "__main__":
 		df.ix[link + 1,2]  = total[0]
 		df.ix[link + 1,3] = total[1]
 		
+		#crawl delay for basketball reference is 3 seconds
 		time.sleep(3)
 		print("-----------------------------------------------------------------")
 		print("\n\n")
@@ -164,4 +175,4 @@ if __name__ == "__main__":
 	df.ix[0,0] = 2016
 	for year in range(1,33):
 		df.ix[year,0] = df.ix[year -1 ,0] -1 
-	print(df)
+	print(df.sort(['Opp_Point_Differential'], ascending= ['False']) )
