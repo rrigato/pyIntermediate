@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
 	
 	#iterates over every championship team
-	for link in range(1):
+	for link in range(32):
 		
 		#Places characters 7-9 of the string into column 1,
 		#this is the name of the championship team
@@ -221,3 +221,5 @@ if __name__ == "__main__":
 		
 	#prints the championship team by highest playoff opponent point differential
 	print( df.sort_values(by='Opp_Point_Differential', ascending= False)  )
+	sorted = df.sort_values(by='Opp_Point_Differential', ascending= False)
+	sorted.to_csv( 'Championships.csv', index=False)
