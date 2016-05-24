@@ -47,8 +47,11 @@ def getLinks(bsObj):
 	global pages
 	#.find("div", {"id":"page-container"})
 	try:
-		print( bsObj.find("div", {"id":"page_container"}).
-					find("div", {"id":"page_content"}).get_text() )
+		links =( bsObj.find("div", {"id":"page_container"})
+					.find("div", {"id":"page_content"})	
+					.findAll("a", href = re.compile("\/teams\/*") ) )
+		for link in links:
+			print(link['href'])
 #		print( bsObj.find(id="mw-content-text").findAll("p")[0].get_text() )
 #		print( "http://en.wikipedia.org" + bsObj.find(id="ca-edit").find("span").find("a").attrs['href'] )
 	except AttributeError as e:
