@@ -61,6 +61,22 @@ def getLinks(bsObj):
 		print(e )
 		
 def getOpponents(link):
+	'''
+		Input: Is given a link to the team page of a championship winning team
+		
+		The function then gets a beatuifulSoup object for that page.
+		It finds the internal links to the 4 team pages that the championship
+		winning team beat in the playoffs
+		
+		The function then goes onto each of those 4 team pages and gets the 
+		point differential and SRS for each team during the regular season.
+
+		Returns: The average point differential and SRS of the championship 
+		winning teams opponents in the playoffs
+		
+		Note: All Championship winning teams since 1984 have played four rounds
+		to win the championship
+	'''
 	webpage = getWebpage(link)
 	bsObj = readTag(webpage)
 	
@@ -103,6 +119,7 @@ def getOpponents(link):
 	total = [point_differential / 4, simple_rating / 4]
 	print("\n Point Differential and SRS of opponents for the playoffs")
 	print(total)
+	return(total)
 	
 #bsObj.find("div", {"id":"page_container"})
 #					.find("div", {"id":"info_box"}).findAll("p")[4]	
@@ -114,7 +131,7 @@ if __name__ == "__main__":
 #	for link in range(32):
 #		print(links[link]['href'])
 
-	index = range(1,34)
+	index = range(0,33)
 	columns =['Year','Team', 'Opp_Point_Differential', 'Opp_SRS']
 	df = pd.DataFrame(index = index, columns = columns)
 	
@@ -128,14 +145,23 @@ if __name__ == "__main__":
 	print(df)
 
 	
-	for link in range(10):
+	for link in range(1):
 		df.ix[link + 1,1] = links[link]['href'][7:9]
 		print("Championship winning team:")
 		print(df.ix[link + 1,1])
 		print()
-		getOpponents(links[link]['href'])
+		
+		#calls a function that returns the average point differential and SRS
+		total = getOpponents(links[link]['href'])
+		df.ix[link + 1,2]  = total[0]
+		df.ix[link + 1,3] = total[1]
+		
 		time.sleep(3)
 		print("-----------------------------------------------------------------")
 		print("\n\n")
 		
+	
+	df.ix[0,0] = 2016
+	for year in range(1,33):
+		df.ix[year,0] = df.ix[year -1 ,0] -1 
 	print(df)
