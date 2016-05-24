@@ -101,6 +101,7 @@ def getOpponents(link):
 	print(point_differential/4)
 	print(simple_rating/4)
 	total = [point_differential / 4, simple_rating / 4]
+	print("\n Point Differential and SRS of opponents for the playoffs")
 	print(total)
 	
 #bsObj.find("div", {"id":"page_container"})
@@ -113,13 +114,28 @@ if __name__ == "__main__":
 #	for link in range(32):
 #		print(links[link]['href'])
 
-	index = range(1,33)
-	columns =['Year','Team', 'Opp_Win_Percentage', 'Opp_Point_Diff']
+	index = range(1,34)
+	columns =['Year','Team', 'Opp_Point_Differential', 'Opp_SRS']
 	df = pd.DataFrame(index = index, columns = columns)
-#	print(df)
+	
+	#filling in the values if OKC were to potientially win championship
+	#DAL SAS GSW CLE
+	#point_differential = -.30  10.63  10.76  6.00
+	#SRS 				= -.02  10.28  10.38  5.45
+	df.ix[0,1] = "OKC*"
+	df.ix[0,2] = 6.7725
+	df.ix[0,3] = 6.5225
+	print(df)
 
 	
-	for link in range(2):
+	for link in range(10):
+		df.ix[link + 1,1] = links[link]['href'][7:9]
+		print("Championship winning team:")
+		print(df.ix[link + 1,1])
+		print()
 		getOpponents(links[link]['href'])
 		time.sleep(3)
-	
+		print("-----------------------------------------------------------------")
+		print("\n\n")
+		
+	print(df)
