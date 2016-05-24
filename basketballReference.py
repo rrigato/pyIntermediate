@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import time
 
 def getWebpage(url):
 	"""
@@ -68,15 +69,39 @@ def getOpponents(link):
 					.find("div", {"id":"info_box"}).findAll("p")[4]
 					.findAll("a", href = re.compile("\/teams\/*") ) ) 
 	
+	#variables to keep for team_stats which correspond to margin of victory and 
+	#srs
+	keep = [2,4]
+	
+	#keeps track of regular season point differential of all 4 playoff opponents
+	point_differential = 0
+	
+	#keeps track of regualr season srs of all 4 playoff opponents
+	simple_rating = 0
+	
 	#get each playoff opponents record, point differential and srs
 	for round in playoffs:
+		time.sleep(3)
 		print((round.attrs['href']))
 		bsObj2 = readTag(getWebpage(round.attrs['href']))
-		print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"info_box"}).findAll("p")[1] )
-		print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"page_content"}).find("div", {"id":"all_team_misc"}).find("div", {"id":"div_team_misc"}).find("table", {"id":"team_misc"}).find("tbody").findAll("tr", {"class":""})[0]
-			.findAll("td", {"align":"right"})[3,5] ) 
-
-	
+		#print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"info_box"}).findAll("p")[1] )
+		team_stats =  ( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"page_content"})
+						.find("div", {"id":"all_team_misc"}).find("div", {"id":"div_team_misc"})
+						.find("table", {"id":"team_misc"}).find("tbody").findAll("tr", {"class":""})[0]
+						.findAll("td", {"align":"right"}) ) 
+		important_stats =  [ team_stats[i] for i in keep ]
+		
+		#gives each opponents margin of victory and srs
+		print(important_stats[0].get_text())
+		print(important_stats[1].get_text())
+		#casting SRS and point_differential as float and getting the cumulative sum for
+		#all four playoff opponents
+		point_differential = point_differential + float(important_stats[0].get_text())
+		simple_rating = simple_rating + float(important_stats[1].get_text())
+	print(point_differential/4)
+	print(simple_rating/4)
+	total = [point_differential / 4, simple_rating / 4]
+	print(total)
 	
 #bsObj.find("div", {"id":"page_container"})
 #					.find("div", {"id":"info_box"}).findAll("p")[4]	
@@ -94,6 +119,7 @@ if __name__ == "__main__":
 #	print(df)
 
 	
-	for link in range(1):
+	for link in range(2):
 		getOpponents(links[link]['href'])
+		time.sleep(3)
 	
