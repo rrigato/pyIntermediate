@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 import time
+import sys
 
 def getWebpage(url):
 	"""
@@ -56,6 +57,7 @@ def getLinks(bsObj):
 	except AttributeError as e:
 		print("Unable to find all Champions")
 		print(e )
+		sys.exit(1)
 		
 def getOpponents(link):
 	'''
@@ -80,10 +82,15 @@ def getOpponents(link):
 	webpage = getWebpage(link)
 	bsObj = readTag(webpage)
 	
-	#gets each championship winning team opponents for each round
-	playoffs = (bsObj.find("div", {"id":"page_container"})
-					.find("div", {"id":"info_box"}).findAll("p")[4]
-					.findAll("a", href = re.compile("\/teams\/*") ) ) 
+	try:
+		#gets each championship winning team opponents for each round
+		playoffs = (bsObj.find("div", {"id":"page_container"})
+						.find("div", {"id":"info_box"}).findAll("p")[4]
+						.findAll("a", href = re.compile("\/teams\/*") ) ) 
+	except AttributeError as e:
+		print("Unable to find Playoff opponent team pages")
+		print(e)
+		sys.exit(1)
 	
 	#variables to keep for team_stats which correspond to margin of victory and 
 	#srs
@@ -123,6 +130,7 @@ def getOpponents(link):
 	except AttributeError as e:
 		print("Unable to find Point Differentials OR SRSs for all opponents")
 		print(e )
+		sys.exit(1)
 	else:
 		print(point_differential/4)
 		print(simple_rating/4)
@@ -146,6 +154,12 @@ def getOpponents(link):
 	point differential and srs
 	Note: The NBA switched to a a 4 round playoff in 1984, so that is the 
 	first year included
+	
+	3) Iterates over every championship team page to call functions which
+		return the average point differential and SRS of playoff opponents
+		
+	4) Prints out a list of championship teams from highest playoff opponent 
+	point differential to lowest and writes the data to a csv
 '''
 if __name__ == "__main__":
 
@@ -173,14 +187,24 @@ if __name__ == "__main__":
 	print(df)
 
 	
-	for link in range(32):
+	#iterates over every championship team
+	for link in range(1):
+		
+		#Places characters 7-9 of the string into column 1,
+		#this is the name of the championship team
 		df.ix[link + 1,1] = links[link]['href'][7:9]
+		
+		#information on which page currently being scraped
 		print("Championship winning team:")
 		print(df.ix[link + 1,1])
 		print()
 		
 		#calls a function that returns the average point differential and SRS
 		total = getOpponents(links[link]['href'])
+		
+		#point differential is in element 0 of the returned list,
+		# and SRS is in element 1
+		#These values are assigned to the correct row in the output data frame
 		df.ix[link + 1,2]  = total[0]
 		df.ix[link + 1,3] = total[1]
 		
