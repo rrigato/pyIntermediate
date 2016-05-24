@@ -70,8 +70,16 @@ def getOpponents(link):
 	
 	#get each playoff opponents record, point differential and srs
 	for round in playoffs:
-		print(round.attrs['href'])
+		print((round.attrs['href']))
+		bsObj2 = readTag(getWebpage(round.attrs['href']))
+		print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"info_box"}).findAll("p")[1] )
+		print( bsObj2.find("div", {"id":"page_container"}).find("div", {"id":"page_content"}).find("div", {"id":"all_team_misc"}).find("div", {"id":"div_team_misc"}).find("table", {"id":"team_misc"}).find("tbody").findAll("tr", {"class":""})[0]
+			.findAll("td", {"align":"right"})[3,5] ) 
 
+	
+	
+#bsObj.find("div", {"id":"page_container"})
+#					.find("div", {"id":"info_box"}).findAll("p")[4]	
 if __name__ == "__main__":
 	webpage = getWebpage("/leagues/?lid=front_qi_leagues")
 	bsObj = readTag(webpage)
