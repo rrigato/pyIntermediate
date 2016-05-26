@@ -1,6 +1,11 @@
 ## pyIntermediate
 
 
+####[Web Scraping Basketball Reference](https://github.com/rrigato/pyIntermediate/blob/master/basketballReference.py)
+The purpose of this script is to get a list of every championship winning basketball team since 1984. The script will then crawl to the championship teams homepage and search for the webpage of each of their 4 opponents. The goal of this script is to find the point differential and simple rating system(SRS) for every championship team's opponents since 1984 
+
+
+
 ####[Web Scraping using Python](https://github.com/rrigato/pyIntermediate/blob/master/firstScrape.py)
 This script demonstrates how to web scrape some basic html sites. The functions also are robost due to the error handling that is provided with try catch blocks
 
