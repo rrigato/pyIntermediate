@@ -4,6 +4,12 @@
 ####[Web Scraping Basketball Reference](https://github.com/rrigato/pyIntermediate/blob/master/basketballReference.py)
 The purpose of this script is to get a list of every championship winning basketball team since 1984. The script will then crawl to the championship teams homepage and search for the webpage of each of their 4 opponents. The goal of this script is to find the point differential and simple rating system(SRS) for every championship team's opponents since 1984 
 
+Functions:
+* getWebage() = Takes the basketball-reference playoff data url and returns the html
+* readTag() = takes html object and returns a beautifulSoup object
+* getLinks() = 		Takes a beatuiful soup object to find all championship winning teams
+* getOpponents() = Finds The average point differential and SRS of the championship winning teams opponents in the playoffs
+
 
 
 ####[Web Scraping using Python](https://github.com/rrigato/pyIntermediate/blob/master/firstScrape.py)
