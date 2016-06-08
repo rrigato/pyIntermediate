@@ -2,6 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model
 
+from pybrain.structure import FeedForwardNetwork
+from pybrain.structure import LinearLayer, SigmoidLayer
+
+
 
 def loadData():
 	'''
@@ -21,6 +25,13 @@ def loadData():
 	regr.fit(diabetes_X_train, diabetes_y_train)
 	
 	print("Coefficients: \n", regr.coef_)
+	
+
+class NN:
+	def __init__(self):
+	
+	def neural(self):
+		n = FeedForwardNetwork()
 	
 
 
