@@ -5,6 +5,7 @@ from sklearn import datasets, linear_model
 from pybrain.structure import FeedForwardNetwork
 from pybrain.structure import LinearLayer, SigmoidLayer
 
+import pickle
 
 
 def loadData():
@@ -35,5 +36,10 @@ class NN:
 	
 
 
+
+class serializeData:
+	def __init__(self):
+	
+	
 if __name__ == '__main__':
 	loadData()
