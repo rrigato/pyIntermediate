@@ -40,6 +40,11 @@ class NN:
 class serializeData:
 	def __init__(self):
 	
+	def dumpData(dataFrame):
+		dataFrame.to_pickle()
+	def readData():
+		return()
+	
 	
 if __name__ == '__main__':
 	loadData()
