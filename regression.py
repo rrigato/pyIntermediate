@@ -4,6 +4,8 @@ from sklearn import datasets, linear_model
 
 from pybrain.structure import FeedForwardNetwork
 from pybrain.structure import LinearLayer, SigmoidLayer
+from sklearn.datasets import load_diabetes
+
 
 import pickle
 
@@ -30,6 +32,16 @@ def loadData():
 
 class NN:
 	def __init__(self):
+	train = load_diabetes()
+	
+	trainX = train.data
+	trainY = train.target
+	
+	trainX = pd.DataFrame(trainX)
+	
+	#rename the columns in python
+	trainX.columns = ['a','b','c','d','e','f','g','h','i','j']
+	
 	
 	def neural(self):
 		n = FeedForwardNetwork()
