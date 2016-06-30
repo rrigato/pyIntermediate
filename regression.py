@@ -30,7 +30,7 @@ def loadData():
 	print("Coefficients: \n", regr.coef_)
 	
 
-class NN:
+class data_manipulation:
 	def __init__(self):
 	train = load_diabetes()
 	
@@ -42,7 +42,16 @@ class NN:
 	#rename the columns in python
 	trainX.columns = ['a','b','c','d','e','f','g','h','i','j']
 	
+	trainX['a_by_b'] = trainX.a /trainX.b
 	
+	
+	trainX.a[trainX.a >0] = trainX.a[trainX.a>0] * -1
+	
+	#initialize a new variable with the color red
+	trainX['car'] = 'red'
+	
+	#replace values with missing
+	trainX.car[0:5] = np.nan
 	def neural(self):
 		n = FeedForwardNetwork()
 	
